@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游朱義導師 古典醫學與佛法學習網頁 (v3 完整版)</title>
+    <style>
+        :root {
+            --primary: #2C4A3E; /* 竹青/森林綠 */
+            --bg: #FAF7F2;      /* 米白 */
+            --accent: #D4AF37;  /* 暖金 */
+            --text: #333333;
+            --light-gray: #f5f5f5;
+            --link-color: #1a5e8f;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        header h1 { margin: 0; font-size: 2rem; font-weight: 500; letter-spacing: 2px; }
+        header p { margin: 10px 0 0; font-size: 1.1rem; color: #E8E5DF; font-weight: 300; }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: white;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: #666;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn.active { color: var(--primary); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 4px; background-color: var(--accent);
+        }
+
+        .tab-content { display: none; padding: 40px 20px; max-width: 1400px; margin: 0 auto; min-height: 60vh; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Wisdom Text Card */
+        .wisdom-card {
+            background: linear-gradient(135deg, var(--primary), #1a2f26);
+            color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px;
+            border-left: 6px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .wisdom-card h3 { color: var(--accent); margin-top: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .wisdom-card p { font-size: 1.05rem; line-height: 1.8; color: #f0f0f0; margin-bottom: 10px; }
+        .wisdom-highlight { background: rgba(212, 175, 55, 0.2); padding: 2px 6px; border-radius: 4px; color: #ffd700; font-weight: bold; }
+
+        /* Grid & Detailed Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 24px; margin-top: 20px; }
+        
+        .detailed-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border-top: 5px solid var(--primary);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .detailed-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .card-header {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .card-header h3 {
+            color: var(--primary);
+            margin: 0 0 12px 0;
+            font-size: 1.4rem;
+        }
+        .card-link-btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #1a2f26;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+        .card-link-btn:hover { background-color: #e6be45; }
+        
+        .card-content h4 {
+            margin: 0 0 10px 0;
+            color: #555;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .card-content ul {
+            margin: 0;
+            padding-left: 24px;
+            color: #444;
+        }
+        .card-content li {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Practice Counter */
+        .practice-panel {
+            background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 4px solid var(--accent);
+        }
+        .practice-panel h3 { color: var(--primary); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.5rem; }
+        .step-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 20px;}
+        .step-list li { background: var(--bg); padding: 15px; border-radius: 8px; font-size: 1.1rem; border-left: 4px solid var(--primary); }
+        .step-highlight { color: #d35400; font-weight: bold; display: block; margin-top: 5px; font-size: 0.95rem;}
+        
+        .counter-box { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ccc; }
+        .count-display { font-size: 3rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+        .progress-bar { width: 100%; max-width: 400px; background: #eee; height: 12px; border-radius: 6px; margin: 15px auto; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.4s ease; }
+        .btn-count { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 10px rgba(44, 74, 62, 0.3); }
+        .btn-count:hover { background: #1a2f26; transform: translateY(-2px); }
+        .btn-reset { background: transparent; color: #888; border: 1px solid #ccc; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-top: 15px; }
+
+        .ancient-steps { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin: 20px 0; justify-content: center; }
+        .ancient-step { background: var(--primary); color: white; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 1.1rem;}
+        .ancient-arrow { color: var(--accent); font-weight: bold; font-size: 1.5rem;}
+        .step-warning { background: #8b0000; }
+
+        @media(max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>游朱義導師 古典醫學與佛法學習網頁</h1>
+        <p>🌸 日日精進・覺性學習。認識自己的身體，提升自我健康意識，掌握生命主導權</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'tab-wisdom')">📝 導師開示與法脈</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-course')">📚 古醫系統課程</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-cases')">🩺 醫方臨床實證</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-practice')">🧘 功法與養生實作</button>
+    </div>
+
+    <!-- TAB 1: 導師開示與法脈 -->
+    <div id="tab-wisdom" class="tab-content active">
+        <div class="wisdom-card">
+            <h3>❤️ 導師話語：2026秋末猶風雨</h3>
+            <p>天相不順，肺病續增。春雨下暑秋燥冬寒，這是地球生態環境的最大規律，秋燥在身體相應肺臟，2026秋末，居然還來了兩個颱風，從天地大氣來說，這不是好現象，是風不調雨不順的徵兆。</p>
+            <p>【<span class="wisdom-highlight">秋末猶風雨，肺病勢必增</span>】加上過去的驚慌疫情，百姓壇中穴大多堵塞，肺病的成長趨勢，預計要在2032年達到高峰，是人類宿命也是共業所感。醫方明學子們不得不理解與提高警覺。</p>
+            <p>別再相信西方醫學的研究，肺臟疾病的首要病因是【<span class="wisdom-highlight">心火欺肺金</span>】，微不足道的空汙不是真兇，次要的病因是濕氣，該燥而不燥的天氣，讓肺臟在秋燥節氣依然忙碌除濕，它會累壞了。肺主大腸，大腸癌也會跟著上升。</p>
+            <p style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.2); padding-top:15px;">
+                <strong>三大自保對策：</strong><br>
+                1. <strong>環境除濕</strong>，降低肺臟負擔。<br>
+                2. <strong>敞開心情</strong>，壇中穴順利轉動，降低心火。<br>
+                3. <strong>使用原生菌</strong>，提升自體免疫系統，從大腸菌相環境協助肺與大腸。
+            </p>
+        </div>
+
+        <div class="grid">
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>古典醫學總導讀</h3>
+                    <a href="https://youtu.be/1Yotsqbfghg" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>建立對古典醫學的宏觀認知與系統框架。</li>
+                        <li>打破中西醫思維的藩籬，理解古人的智慧。</li>
+                        <li>認識人體氣血運行的基本法則與經絡。</li>
+                        <li>重新掌握生命的主導權與自我健康意識。</li>
+                        <li>深入了解古醫「治未病」的核心預防精神。</li>
+                        <li>學會跨越現代病名標籤，直擊底層真實病機。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>🙏 游朱義老師佛法分享 (共38集)</h3>
+                    <a href="https://www.youtube.com/playlist?list=PL37L2Y8jeuGB4qJ65fc5P2OGWUmYpelff" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>【十法界 1-4】探討十法界宇宙觀與生命輪迴層次。</li>
+                        <li>【唯識論 5-10】深入唯識論，解析心識與五蘊運作法則。</li>
+                        <li>【心經新解 11-15】以現代醫學與古醫學視角重新解碼心經。</li>
+                        <li>將無形的佛法心法與有形的醫法雙修融合。</li>
+                        <li>教導放下我執，開啟生命本源的覺知與佛性。</li>
+                        <li>理解十法界能量與人體微觀磁場的共振關係。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 醫方明法脈源流</h3>
+                    <a href="https://www.youtube.com/playlist?list=PL37L2Y8jeuGAwFRDtMLTxc5evQ0mwtIRI" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>追溯「醫方明」法脈的悠久歷史傳承與脈絡。</li>
+                        <li>領悟歷代中醫名家一脈相承的實證智慧結晶。</li>
+                        <li>深刻理解「醫道同源、醫佛不二」的內涵。</li>
+                        <li>堅定學習古典醫學的正知正見與強大信心。</li>
+                        <li>認知作為醫方明學子傳承與發揚正法醫學的使命。</li>
+                        <li>探討伽藍護法與醫學救世的相輔相成。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學道器圓融真經</h3>
+                    <a href="https://www.youtube.com/playlist?list=PL37L2Y8jeuGDoWMa7lv8K14oUW0n1m-vI" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>探討「道」(無形) 與「器」(有形) 在人體之圓融。</li>
+                        <li>形而上的心法與形而下的肉體結構完美結合。</li>
+                        <li>將內在自我修為與外在醫學技法相搭配。</li>
+                        <li>提升醫學思維境界，契合「道法自然」規律。</li>
+                        <li>指導如何達到身、心、靈最高層次的健康和諧。</li>
+                        <li>解析萬物生化之道在臨床醫學上的實際應用。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>🍎 第一屆。醫方法門皈證大典</h3>
+                    <a href="https://www.youtube.com/watch?v=r2ROfEY6xlo&list=PL37L2Y8jeuGAwFRDtMLTxc5evQ0mwtIRI&index=7" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>見證醫方法門莊嚴無比的皈證儀式全紀錄。</li>
+                        <li>確立醫學學習者的堅定願力與助人使命感。</li>
+                        <li>傳承醫方明慈悲濟世、拔苦與樂的核心精神。</li>
+                        <li>感受法脈傳承的無形加持、護佑與心靈洗滌。</li>
+                        <li>正式開啟醫道雙修、自利利他的嶄新旅程。</li>
+                        <li>確立以正法行醫、不違背天道自然的誓願。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: 古醫系統課程 -->
+    <div id="tab-course" class="tab-content">
+        <h2 style="color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:10px;">古典醫學系統化學習清單</h2>
+        <div class="grid">
+            
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學『覺醒』系列</h3>
+                    <a href="https://m.youtube.com/playlist?list=PL37L2Y8jeuGAu8PJeIWV5Dx0rNM8OT5-S" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>全面喚醒對自我身體內在運作的深層覺察力。</li>
+                        <li>辨別並破除錯誤的現代健康資訊與養生迷思。</li>
+                        <li>重新建立人體整體的氣血與能量運作觀念。</li>
+                        <li>找回與大自然四時節氣共振的本能與智慧。</li>
+                        <li>重拾生命與健康主導權，從依賴轉為自我覺醒。</li>
+                        <li>學會正確解讀疾病與症狀（身體發出的求救訊號）。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學『黃帝內經』系列</h3>
+                    <a href="https://www.youtube.com/playlist?list=PL37L2Y8jeuGDO0e7socmz4jJRw9Osv9dP" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>深入解析「陰陽五行」的核心概念與醫學應用。</li>
+                        <li>完整探討「十二經脈」的循行與臟腑緊密關係。</li>
+                        <li>解碼二十四節氣與天人合一的古法養生智慧。</li>
+                        <li>了解人體氣血生化之源，以及如何護養正氣。</li>
+                        <li>掌握順時養生、順應天地法則的不二法門。</li>
+                        <li>透析臟腑表裡連線對疾病傳變的關鍵影響。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學『人體設計』系列</h3>
+                    <a href="https://youtube.com/playlist?list=PL37L2Y8jeuGDeSRi5ntD_gK1pBM8KlSkv&si=uiB4PEgpgMHN6omV" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>全面了解造物主賦予人體的精密設計藍圖。</li>
+                        <li>認識十二經絡系統精確的走向、分佈與立體結構。</li>
+                        <li>洞悉五臟六腑互相制約、生剋與協作的完美機制。</li>
+                        <li>順應身體自然設計法則的最高養生之道。</li>
+                        <li>學習如何正確啟動人體內建的強大自癒與修復力。</li>
+                        <li>認識人體對抗外邪入侵的完美三道防禦機制。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學之慢性疾病系列</h3>
+                    <a href="https://youtube.com/playlist?list=PLukxSiVtXy18xaXGU0j-NuXQAqqT64aBW&si=zQtl8VGLWwO7jiV5" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>拆解現代慢性病在古醫學中的根本病因與邏輯。</li>
+                        <li>探討高血壓、糖尿病背後的氣血失衡與臟腑虛實。</li>
+                        <li>學習透過日常生活、飲食調理與經絡進行臟腑修復。</li>
+                        <li>教導如何從源頭拔除病根，停止無效壓制症狀。</li>
+                        <li>打破必須「終身服藥」的現代醫學恐嚇與迷思。</li>
+                        <li>恢復脾胃運化與腎氣固攝，逆轉慢性耗損。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 『重症』系列</h3>
+                    <a href="https://www.youtube.com/playlist?list=PLukxSiVtXy1-3rFiopisTAPuJiJGa6Csa" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>深度剖析重症（如癌症、腫瘤）形成的古醫學病機發展。</li>
+                        <li>辨識人體氣血極度衰敗與「陰陽離決」的危險徵兆。</li>
+                        <li>探討「扶正祛邪」在重症臨床實務上的靈活應用。</li>
+                        <li>破除患者與家屬對重大疾病的極度恐懼與絕望。</li>
+                        <li>強調身心靈一體，從「心法」出發的全面生命修復。</li>
+                        <li>重症調養中的能量重建重點與飲食禁忌。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 『兒童疾病』系列</h3>
+                    <a href="https://www.youtube.com/playlist?list=PLukxSiVtXy18YtJBT9g4GZx_hO_zVxaUj" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>認識幼兒「稚陰稚陽、生機蓬勃」的獨特生理體質。</li>
+                        <li>破解家長對感冒發燒的恐慌，學習正確物理降溫與照護。</li>
+                        <li>重視孩童脾胃養護，解決食慾不振、過敏與消化問題。</li>
+                        <li>了解過度依賴抗生素與退燒藥對孩子正氣的深遠損傷。</li>
+                        <li>運用推拿、導引與溫和食療為下一代建立自然免疫防線。</li>
+                        <li>教導辨識兒童外感風寒與食積化熱的關鍵差異。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>❤️ 古典醫學『國際病症分析師』</h3>
+                    <a href="https://www.youtube.com/playlist?list=PL37L2Y8jeuGAPXfaDboVRVM9ViaxJKnZ2" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>培養具備古醫學深度的專業病症分析與診斷視角。</li>
+                        <li>掌握中醫「辨證論治、審因論治」不可或缺的核心邏輯。</li>
+                        <li>學會跨越西方醫學病名標籤，直擊底層真實病機。</li>
+                        <li>透過望聞問切與經絡檢測，大幅提升臨床實務判斷精準度。</li>
+                        <li>作為醫方明專業人才與全球種子師資的核心高階培訓。</li>
+                        <li>複雜共病與疑難雜症的病因溯源與抽絲剝繭技巧。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: 醫方臨床實證 -->
+    <div id="tab-cases" class="tab-content">
+        <h2 style="color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:10px;">醫方明實證 / 寅證精華卡片清單</h2>
+        <div class="grid">
+            
+            <div class="detailed-card" style="grid-column: 1 / -1; border-top: 5px solid var(--accent);">
+                <div class="card-header">
+                    <h3>📚 醫方明實證系列 / 惠中寺演講與見證分享 (全集)</h3>
+                    <a href="https://youtube.com/playlist?list=PLukxSiVtXy18AGkUy0fUf5Ta8eUTfjhji" target="_blank" class="card-link-btn">▶ 前往 YouTube 完整播放清單</a>
+                </div>
+                <div class="card-content">
+                    <p>此合集收錄了游朱義導師所有的真實個案臨床探討、惠中寺演講精華，以及真理法師等人的見證分享。是驗證古典醫學理論最寶貴的實務資料庫。</p>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>01 奔豚症</h3>
+                    <a href="https://www.youtube.com/watch?v=67XMRaX8o0U" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>解析「腎水上泛凌心」的古醫病機。</li>
+                        <li>下焦寒水氣化失常引發的全身性臨床表現。</li>
+                        <li>運用導引將心火下行，溫煦腎水以平息逆氣。</li>
+                        <li>改善腹部嚴重脹氣與如豚奔突的悸動感。</li>
+                        <li>理解古醫對「氣機逆亂」的定義與對策。</li>
+                        <li>溫陽化飲，重建中焦脾胃的樞紐功能。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>02 乳癌</h3>
+                    <a href="https://www.youtube.com/watch?v=KyxOAsH7cK8" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>探討情志不遂、肝氣鬱結對乳房的毀滅性影響。</li>
+                        <li>剖析足陽明胃經與乳房氣血供應的直接關聯。</li>
+                        <li>理解「氣滯血瘀」長期累積形成腫塊的機理。</li>
+                        <li>學習如何透過暢通心胸、釋放壓力來化解鬱結。</li>
+                        <li>破除「切除即痊癒」的西醫局部治療迷思。</li>
+                        <li>疏肝解鬱與健脾化痰並重，改變致癌體質。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>25 嚴重車禍多重創傷</h3>
+                    <a href="https://youtu.be/1w1jKcuUXOE" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>創傷引發全身經絡氣血嚴重阻滯與逆亂現象。</li>
+                        <li>接骨續筋與「化瘀生新」的古醫創傷修復原則。</li>
+                        <li>臟腑受到劇烈震盪後的能量重建與安神。</li>
+                        <li>處理肌肉深層痛點與車禍遺留的恐懼情緒。</li>
+                        <li>耐心護養，避免在修復期過度活動造成耗損。</li>
+                        <li>運用活血化瘀手法加速微循環網絡的重建。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>26 膽結石、肝硬化、脾腫大、血小板低下</h3>
+                    <a href="https://youtu.be/V_0f_qU0_io" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>剖析「肝膽濕熱蘊結」導致結石與硬化的深層病機。</li>
+                        <li>疏肝理氣與利膽化石的相互搭配運用。</li>
+                        <li>五行相剋：解析「木鬱剋土」導致脾臟腫大的連鎖反應。</li>
+                        <li>改善血小板低下的氣血生化源頭（脾不統血）。</li>
+                        <li>強調飲食清淡、減少肝膽負擔的絕對重要性。</li>
+                        <li>情緒舒展對於肝臟柔韌度的直接影響。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>27 腿腳不便、長年便秘、車禍撞擊腰痛</h3>
+                    <a href="https://youtu.be/gpw8yvru168" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>腎氣不足與大腸傳導無力（氣虛便秘）的關係。</li>
+                        <li>車禍撞擊造成的腰部督脈與膀胱經氣血瘀滯。</li>
+                        <li>溫陽通便，嚴格禁止依賴寒涼瀉藥損傷腸胃。</li>
+                        <li>疏通腰背經絡，釋放深層沾黏與神經壓迫。</li>
+                        <li>導引氣血下行，重建下半身力量與肌肉彈性。</li>
+                        <li>促進腸道自主蠕動功能，恢復排泄本能。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>28 難以置信的腎臟片</h3>
+                    <a href="https://youtu.be/RynIk9RUiqg" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>腎氣虛衰對全身臟腑與骨骼系統的連鎖負面影響。</li>
+                        <li>固本培元、填精益髓的古醫深層修復法門。</li>
+                        <li>突破現代醫學宣稱「腎臟功能不可逆」的迷思。</li>
+                        <li>運用特定頻率（如砭石）與導引喚醒沉睡的腎氣。</li>
+                        <li>強調持之以恆保養與節制慾望的必要性。</li>
+                        <li>早睡早起、避免過勞等生活作息的嚴格配合。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>29 心臟無力</h3>
+                    <a href="https://youtu.be/098yzuAZ1NI" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>心氣虛弱導致的胸悶、氣短與循環不良現象。</li>
+                        <li>溫通心陽，以推動全身血液循環至末梢神經。</li>
+                        <li>分析「壇中穴鬱結」對心臟搏動空間的物理壓迫。</li>
+                        <li>舒緩精神壓力與開展胸腔肋骨的實作技巧。</li>
+                        <li>辨別「心氣虛」與「心血瘀」在症狀上的差異。</li>
+                        <li>避免過度劇烈運動反耗心氣，提倡和緩導引。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>30 乾眼症、白內障、攝護腺肥大</h3>
+                    <a href="https://youtu.be/4TraO-yigGw" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>「肝開竅於目」，眼疾反映出肝血不足或肝腎陰虛。</li>
+                        <li>滋補肝腎，引水上濟以明目潤燥。</li>
+                        <li>下焦濕熱與腎氣虛導致攝護腺肥大、排尿不順的關聯。</li>
+                        <li>清利下焦濕熱，恢復膀胱水道的通暢。</li>
+                        <li>完美展現中醫「上病下治、異病同治」的整體觀。</li>
+                        <li>養血明目與通利水道的同步調理策略。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>31 顏面神經失調、膝蓋不好</h3>
+                    <a href="https://youtu.be/nc3uxbgYecc" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>風邪中絡（經絡受風寒）導致的面部氣血運行中斷。</li>
+                        <li>祛風通絡，恢復顏面神經的正常傳導與肌肉控制。</li>
+                        <li>「肝主筋，腎主骨」，解析膝蓋退化的雙重臟腑病機。</li>
+                        <li>強健下肢筋骨與引氣血下行滋養關節的導引法。</li>
+                        <li>強調避免頭面部與關節受冷風直吹的日常防護。</li>
+                        <li>疏通膽經與胃經，改善下肢無力與麻木。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>32 臨終四相</h3>
+                    <a href="https://youtu.be/NFeGLwZNmF8" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>認識生命末期「地、水、火、風」四大元素分離的過程。</li>
+                        <li>理解靈魂脫離肉體時的生理現象與能量衰竭變化。</li>
+                        <li>呼籲減少無效醫療插管對臨終者的痛苦折磨。</li>
+                        <li>用佛法智慧坦然面對生死輪迴，放下執著。</li>
+                        <li>陪伴者應具備的平靜心態與正確的臨終引導。</li>
+                        <li>幫助逝者在安詳無懼中完成生命的最後轉換。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>33 偏頭痛</h3>
+                    <a href="https://youtube.com/playlist?list=PLukxSiVtXy18AGkUy0fUf5Ta8eUTfjhji" target="_blank" class="card-link-btn">▶ 前往 YouTube 播放清單尋找</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>少陽膽經氣血阻滯引發的典型側頭部疼痛。</li>
+                        <li>肝陽上亢化風，學習平肝息風的調理原則。</li>
+                        <li>情緒波動、壓力與熬夜對頭部經絡的毀滅性影響。</li>
+                        <li>透過按蹺釋放頸部、肩部與頭皮的筋膜緊繃。</li>
+                        <li>改變急躁的生活節奏，尋求內在的平靜與放鬆。</li>
+                        <li>引血下行，改善頭部氣血過度充血的狀態。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>34 重摔腦傷二十年</h3>
+                    <a href="https://m.youtube.com/watch?v=9RewQKstQJU" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>陳年瘀血阻滯腦部經絡造成的長期頭痛與神經症狀。</li>
+                        <li>陽氣無法順利上達頭目導致的暈眩與後遺症。</li>
+                        <li>「活血化瘀」與「引氣歸元」在腦傷修復的應用。</li>
+                        <li>頸椎與督脈氣血通道的重新定位與重建。</li>
+                        <li>理解漫長神經修復期所需的身心調適與耐心。</li>
+                        <li>恢復頭部微循環，改善大腦缺氧狀態。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>35 術後疤痕、骨盆異位、皮膚癢 (皮虎廣)</h3>
+                    <a href="https://m.youtube.com/watch?v=91Ziomc619c" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>手術刀口切斷經絡導致的氣血不通與長期隱痛。</li>
+                        <li>骨盆歪斜嚴重影響下焦氣機運作與生殖泌尿功能。</li>
+                        <li>風邪與濕邪鬱結於體表引發的頑固性皮膚瘙癢。</li>
+                        <li>運用溫熱與按摩修復疤痕組織與經絡連結。</li>
+                        <li>理筋正骨糾正骨盆，配合養血潤燥止癢。</li>
+                        <li>恢復下焦循環，拔除體內深層濕毒。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>36 身體的緊繃、痠痛消失了</h3>
+                    <a href="https://m.youtube.com/watch?v=fOL4ovyjmq4" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>「肝主筋」，全身筋膜緊繃源於肝血不足無法濡養。</li>
+                        <li>寒濕之邪客於肌肉關節引發的游走性痠痛。</li>
+                        <li>透過導引按蹺物理性鬆解深層筋膜沾黏。</li>
+                        <li>實踐「氣血得溫則行，得寒則凝」的溫敷與保暖。</li>
+                        <li>恢復身體本有的柔韌度與肌肉彈性。</li>
+                        <li>驅除潛藏在骨縫與肌理間的深層寒氣。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>37 汗皰疹、尿道炎</h3>
+                    <a href="https://m.youtube.com/watch?v=VbExdSTkKEM" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>脾虛濕盛，濕熱下注引發的下半身與末梢炎症。</li>
+                        <li>理解汗皰疹為體內濕邪排出的窗口，非單純皮膚病。</li>
+                        <li>尿道炎與「心火移熱於小腸」的臟腑表裡關聯。</li>
+                        <li>清熱利濕與健脾化濕的雙管齊下調理法。</li>
+                        <li>嚴格忌口冰品冷飲，防止二次損傷脾胃陽氣。</li>
+                        <li>提升脾胃運化水濕的能力，從根本斷絕濕熱來源。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: 功法與養生實作 -->
+    <div id="tab-practice" class="tab-content">
+        
+        <div class="practice-panel">
+            <h3>🫁 秋天是養肺的季節：全方位呼吸法</h3>
+            <p>透過動作分別把氣吸灌到上焦胸腔的前後左右，增進肺部的含氧量。<br>
+               <a href="https://www.instagram.com/reel/DezCo5wuYOH/" target="_blank" style="color:var(--primary); font-weight:bold; text-decoration:underline;">▶ 點此查看 IG 功法示範 (一天練12趟再配合原生菌，一定肺好壯壯)</a>
+            </p>
+            
+            <ul class="step-list">
+                <li>1. 開胸闢肺 (前) <span class="step-highlight">意守膻中</span></li>
+                <li>2. 氣貫脊背 (後) <span class="step-highlight">意守夾脊</span></li>
+                <li>3. 側引双肋 (左右) <span class="step-highlight">意守兩側肋脅</span></li>
+                <li>4. 猿呼引肋 <span class="step-highlight">兩側線到面的牽引刺激</span></li>
+                <li>5. 拓引胸腺 <span class="step-highlight">側面肋脅到膻中的牽引開合</span></li>
+                <li>6. 旋腕轉臂 <span class="step-highlight">手三陰三陽牽引 + 丹田內轉 (促進七轉處氣血)</span></li>
+            </ul>
+            
+            <div class="counter-box">
+                <h4>🎯 每日練氣目標：12 趟</h4>
+                <div class="count-display"><span id="lungCount">0</span> / 12</div>
+                <div class="progress-bar"><div class="progress-fill" id="lungProgress"></div></div>
+                <button class="btn-count" onclick="addCount()">+ 完成 1 趟打卡</button>
+                <button class="btn-reset" onclick="resetCount()">重置進度</button>
+            </div>
+        </div>
+
+        <div class="practice-panel" style="text-align:center;">
+            <h3>🌿 古醫先賢調養 5 大階梯順序</h3>
+            <p>自古就是遵循此順序，最後不得已才用藥。</p>
+            <div class="ancient-steps">
+                <div class="ancient-step">1. 導引按蹺</div>
+                <div class="ancient-arrow">➔</div>
+                <div class="ancient-step">2. 砭</div>
+                <div class="ancient-arrow">➔</div>
+                <div class="ancient-step">3. 灸</div>
+                <div class="ancient-arrow">➔</div>
+                <div class="ancient-step">4. 針</div>
+                <div class="ancient-arrow">➔</div>
+                <div class="ancient-step step-warning">5. 藥 (最後不得已才用藥)</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>🦠 原生菌介紹 (輔助大腸與肺)</h3>
+                    <a href="https://youtu.be/y8zxhsgZ9sU" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>使用外力協助的健康方案。</li>
+                        <li>大幅提升自體免疫系統與腸道健康。</li>
+                        <li>直接從大腸菌相環境著手進行體質改善。</li>
+                        <li>利用「肺主大腸，表裡相依」的原理，從腸道協助肺臟。</li>
+                        <li>對抗秋燥與環境濕氣的輔助利器。</li>
+                        <li>在這個亂世末法，保障自己健康的重要防線。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>👑 黃帝內經養腎金句與觀念</h3>
+                    <a href="https://www.instagram.com/p/De292EDEws6/" target="_blank" class="card-link-btn">▶ 點此查看 IG：只要學過古典醫學的人都瞭解</a>
+                </div>
+                <div class="card-content">
+                    <p style="font-size:1.1rem; font-style:italic; color:var(--primary); font-weight:bold; border-left:4px solid var(--accent); padding-left:10px; margin-bottom:15px;">
+                        「腎者，作強之官，伎巧出焉。」
+                    </p>
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>腎為先天之本，主宰腰腿的能量與根基。</li>
+                        <li>人的意志力與行動力的關鍵來自於腎氣的充足與否。</li>
+                        <li>人老腿先老，馳騁沙場完成夢想要有紮實的腰腿能量做基礎。</li>
+                        <li>養好腎氣（腎臟加強片）與腰腿（砭石共振桶），促進下肢循環。</li>
+                        <li>加上下半身的肌力與耐力訓練，人生的下半場一定是彩色的。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Tab Switching
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Lung Practice Counter
+        let count = parseInt(localStorage.getItem('lungPracticeCount_v3')) || 0;
+        const maxCount = 12;
+        
+        function updateCounterUI() {
+            document.getElementById('lungCount').innerText = count;
+            const percentage = Math.min((count / maxCount) * 100, 100);
+            document.getElementById('lungProgress').style.width = percentage + '%';
+        }
+
+        function addCount() {
+            if (count < maxCount) {
+                count++;
+                localStorage.setItem('lungPracticeCount_v3', count);
+                updateCounterUI();
+                if(count === maxCount) alert('🎉 恭喜完成今日 12 趟養肺功法！持續精進！');
+            }
+        }
+
+        function resetCount() {
+            if(confirm('確定要重置今日進度嗎？')) {
+                count = 0;
+                localStorage.setItem('lungPracticeCount_v3', count);
+                updateCounterUI();
+            }
+        }
+        
+        // Init UI
+        updateCounterUI();
+    </script>
+</body>
+</html>
