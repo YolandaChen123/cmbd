@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游朱義導師 古典醫學與佛法學習網頁 (v6 最終修復版)</title>
+    <title>游朱義導師 古典醫學與佛法學習網頁 (v8 完整整合版)</title>
     <style>
         :root {
             --primary: #2C4A3E; /* 竹青/森林綠 */
@@ -33,7 +33,7 @@
         
         .tabs {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             background: white;
             border-bottom: 2px solid var(--primary);
             position: sticky;
@@ -156,8 +156,12 @@
         .ancient-arrow { color: var(--accent); font-weight: bold; font-size: 1.5rem;}
         .step-warning { background: #8b0000; }
 
+        @media(min-width: 769px) {
+            .tabs { justify-content: center; }
+        }
         @media(max-width: 768px) {
             .grid { grid-template-columns: 1fr; }
+            .tab-btn { padding: 14px 16px; font-size: 0.98rem; }
         }
     </style>
 </head>
@@ -168,13 +172,14 @@
         <p>🌸 日日精進・覺性學習。認識自己的身體，提升自我健康意識，掌握生命主導權</p>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-target="tab-wisdom">📝 導師開示與法脈</button>
-        <button class="tab-btn" data-target="tab-course">📚 古醫系統課程</button>
-        <button class="tab-btn" data-target="tab-cases">🩺 醫方臨床實證</button>
-        <button class="tab-btn" data-target="tab-probiotics">🦠 原生菌與腸道專題</button>
-        <button class="tab-btn" data-target="tab-practice">🧘 功法與養生實作</button>
-    </div>
+    <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn active" data-target="tab-wisdom" onclick="switchTab('tab-wisdom', this)">📝 導師開示與法脈</button>
+        <button type="button" class="tab-btn" data-target="tab-course" onclick="switchTab('tab-course', this)">📚 古醫系統課程</button>
+        <button type="button" class="tab-btn" data-target="tab-cases" onclick="switchTab('tab-cases', this)">🩺 醫方臨床實證</button>
+        <button type="button" class="tab-btn" data-target="tab-probiotics" onclick="switchTab('tab-probiotics', this)">🦠 原生菌與腸道專題</button>
+        <button type="button" class="tab-btn" data-target="tab-water" onclick="switchTab('tab-water', this)">💧 喝水的科學</button>
+        <button type="button" class="tab-btn" data-target="tab-practice" onclick="switchTab('tab-practice', this)">🧘 功法與養生實作</button>
+    </nav>
 
     <!-- TAB 1: 導師開示與法脈 -->
     <div id="tab-wisdom" class="tab-content active">
@@ -189,6 +194,12 @@
                 2. <strong>敞開心情</strong>，壇中穴順利轉動，降低心火。<br>
                 3. <strong>使用原生菌</strong>，提升自體免疫系統，從大腸菌相環境協助肺與大腸。
             </p>
+        </div>
+
+        <div class="wisdom-card" style="background: linear-gradient(135deg, #3b2d1f, #5c4328); border-left-color: var(--accent);">
+            <h3>✨ 壇中者，喜樂出焉</h3>
+            <p>「<span class="wisdom-highlight">壇中者，喜樂出焉。</span>」老子曰：「萬物皆備於我，反身而誠，樂莫大焉」。</p>
+            <p><strong>自身壇中，才是真正的營養專家，心外無法，不假外求。</strong></p>
         </div>
 
         <div class="grid">
@@ -419,7 +430,7 @@
 
     <!-- TAB 3: 醫方臨床實證 -->
     <div id="tab-cases" class="tab-content">
-        <h2 style="color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:10px;">醫方明實證 / 寅證精華卡片清單</h2>
+        <h2 style="color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:10px;">醫方明實證 / 實證精華卡片清單</h2>
         <div class="grid">
             
             <div class="detailed-card" style="grid-column: 1 / -1; border-top: 5px solid var(--accent);">
@@ -701,6 +712,98 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>17 免疫疾病</h3>
+                    <a href="https://youtu.be/9usnDfHYDGw?si=nGTKrt_iVHYvQoTf" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 學習重點：</h4>
+                    <ul>
+                        <li>從古典醫學視角解析免疫系統失調的根本臟腑病機。</li>
+                        <li>釐清大腸微生態、肺氣與全身自體免疫防線的密切連動。</li>
+                        <li>破除單純抑制免疫反應的迷思，回歸扶正固本與氣血調和。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 新增臨床實證 Q&A 卡片 -->
+            <div class="detailed-card" style="border-top-color: var(--accent);">
+                <div class="card-header">
+                    <h3>💬 臨床 Q&A｜長輩60歲近來厭食吃不下（已瘦8公斤），如何恢復原態？</h3>
+                    <span style="color:#666; font-size:0.9rem;">(臨床調理問答實錄)</span>
+                </div>
+                <div class="card-content">
+                    <p style="background: var(--bg); padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 0;">
+                        <strong>💡 核心病機：</strong>胃若缺氧會沒有食慾，活動量少、熱量消耗少也同樣會沒有食慾。
+                    </p>
+                    <h4>✨ 恢復原態四大對策：</h4>
+                    <ul>
+                        <li><strong>1. 壇中揉開：</strong>疏通上焦氣機，解除胸中鬱結。</li>
+                        <li><strong>2. 肺經與脾胃經多按：</strong>雲門、中府，肘窩與大魚際要拍或按，多加疏通。</li>
+                        <li><strong>3. 多運動：</strong>增加身體活動與熱量消耗，自然才會產生飢餓感。</li>
+                        <li><strong>4. 補充原生菌：</strong>改善腸道菌相與消化吸收功能。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card" style="border-top-color: var(--accent);">
+                <div class="card-header">
+                    <h3>💬 臨床 Q&A｜看東西時兩眼無法聚焦（單眼沒問題），如何恢復原態？</h3>
+                    <span style="color:#666; font-size:0.9rem;">(臨床調理問答實錄)</span>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 恢復原態五大調理重點：</h4>
+                    <ul>
+                        <li><strong>1. 疏通肝經：</strong>「肝開竅於目」，肝經太沖穴平時要多按。</li>
+                        <li><strong>2. 注意頸椎姿勢：</strong>頸椎第 2～3 節與眼睛神經反射直接相關，避免低頭壓迫。</li>
+                        <li><strong>3. 眼周穴位按摩：</strong>眼眶周圍攢竹、魚腰、絲竹空等穴位可以多按摩。</li>
+                        <li><strong>4. 晚上熱敷：</strong>睡前或晚上可戴加熱眼罩，促進眼周氣血循環。</li>
+                        <li><strong>5. 白天防護：</strong>白天可配戴共振鏡框輔助調理。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card" style="border-top-color: var(--accent);">
+                <div class="card-header">
+                    <h3>💬 臨床 Q&A｜失智者每天用力吸鼻子可改善？是否有參考影片與輔具？</h3>
+                    <span style="color:#666; font-size:0.9rem;">(臨床調理問答實錄)</span>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 導師推薦參考影片與改善輔具解析：</h4>
+                    <ul>
+                        <li>透過特定呼吸與吸氣導引，促進頭面部與腦部氣血灌流。</li>
+                        <li>搭配相關共振輔具與經絡疏通方法，協助改善腦部循環與機能。</li>
+                    </ul>
+                    <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+                        <a href="https://youtube.com/watch?v=t4eL4QPG3gw&feature=shared" target="_blank" class="card-link-btn">▶ 參考影片 1：前往 YouTube 觀看</a>
+                        <a href="https://youtu.be/rMQ5L0b3egw?si=kF-t3l_-ea5QfRKR" target="_blank" class="card-link-btn">▶ 參考影片 2：前往 YouTube 觀看</a>
+                        <a href="https://youtu.be/8BQhRLGJBy8?si=uPjvz-JeG0pq4jiO" target="_blank" class="card-link-btn">▶ 參考影片 3：前往 YouTube 觀看</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detailed-card" style="border-top-color: var(--accent);">
+                <div class="card-header">
+                    <h3>💬 臨床 Q&A｜請問思覺失調症有辦法改善嗎？</h3>
+                    <span style="color:#666; font-size:0.9rem;">(臨床調理問答實錄)</span>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 古醫核心調理方向：</h4>
+                    <ul>
+                        <li><strong>1. 揉開壇中至華蓋：</strong>心主神明、為君主之官、壇中者喜樂出焉。所有與腦部有關的問題皆為心的問題，因此<strong>壇中至華蓋揉開至關重要</strong>，否則仙丹亦罔然‼️</li>
+                        <li><strong>2. 強化腎氣：</strong>腎氣通骨髓，骨髓通腦髓。腎臟也影響人體內分泌系統，強化腎氣可以還精補腦，增進腦部機能。</li>
+                    </ul>
+                    <h4>🌿 可搭配使用之法品：</h4>
+                    <ul>
+                        <li><strong>1. 共振帽</strong></li>
+                        <li><strong>2. 護心 🫀</strong></li>
+                        <li><strong>3. 腎臟加強片</strong></li>
+                        <li><strong>4. 原生菌或中焦酵素：</strong>大腸為第二個大腦 🧠，腸道好菌與其代謝產物，會與神經、免疫及荷爾蒙訊號互相作用。</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -787,7 +890,68 @@
         </div>
     </div>
 
-    <!-- TAB 5: 功法與養生實作 -->
+
+    <!-- TAB 5: 喝水的科學 -->
+    <div id="tab-water" class="tab-content">
+        <h2 style="color:var(--primary); border-bottom:2px solid var(--accent); padding-bottom:10px;">💧 喝水的科學（原態水、共振水與身體代謝）</h2>
+
+        <div class="wisdom-card" style="background: linear-gradient(135deg, #0f4c5c, #1b6ca8); border-left-color: #7bdff2;">
+            <h3>💧 原態水跟共振甕的水有何差別？</h3>
+            <p style="font-size: 1.15rem;"><strong>兩者皆具備「高含氧」與「高代謝」特性，而「<span class="wisdom-highlight">原態水代謝力更高</span>」！</strong></p>
+            <p>好水能幫助腸道維持清淨、促進全身氣血與細胞微循環代謝；搭配原生菌調理時，務必使用<strong>常溫好水（原態水或共振水）</strong>，切勿使用溫熱水以免破壞活菌活性。</p>
+        </div>
+
+        <div class="grid">
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>💦 喝水的科學與腸道微生態深論</h3>
+                    <a href="https://youtu.be/l4xfv0v8pdI?si=zZ1Pry5KqFJK_vtO" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看（喝水專題）</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 核心重點：</h4>
+                    <ul>
+                        <li><strong>水質決定代謝效率：</strong>高含氧、高代謝的好水能迅速進入細胞參與生化運作，協助帶走體內廢物。</li>
+                        <li><strong>原態水 vs. 共振甕水：</strong>兩者皆有高含氧與高代謝優勢，其中<strong>原態水的代謝力更勝一籌</strong>。</li>
+                        <li><strong>腸道濕潤與排便順暢：</strong>補充原生菌若出現便秘反應，往往代表體內水分不足，需多喝好水並將原生菌改為早中晚分批食用。</li>
+                        <li><strong>原生菌飲水禁忌：</strong>活菌<strong>絕對不可配溫熱水</strong>服用，應搭配常溫原態水或共振水。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>🌊 大腸清淨與好水代謝（日本研究專題）</h3>
+                    <a href="https://youtu.be/iDL8FcvzrFc?si=KDqvzkyObqaOl525" target="_blank" class="card-link-btn">▶ 前往 YouTube 觀看（大腸專題）</a>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 核心重點：</h4>
+                    <ul>
+                        <li><strong>大腸與肺相表裡：</strong>肺主「宣發肅降」，大腸主「傳導糟粕」，大腸乾淨則肺氣順暢。</li>
+                        <li><strong>宿便與壞菌毒素：</strong>便秘宿便會讓大腸累積壞菌與廢氣，透過血液循環影響全身免疫。</li>
+                        <li><strong>好水＋原生菌雙管齊下：</strong>透過幾個月時間使用原生菌調理腸道，並多喝好水（原態水／共振水），讓腸道恢復乾淨與自主蠕動。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detailed-card">
+                <div class="card-header">
+                    <h3>📋 日常科學喝水與養生守則</h3>
+                    <span style="color:#666; font-size:0.9rem;">(整合導師開示與實作要點)</span>
+                </div>
+                <div class="card-content">
+                    <h4>✨ 實作建議：</h4>
+                    <ul>
+                        <li><strong>優先選擇高代謝好水：</strong>日常飲水以<strong>原態水</strong>（代謝力最高）或<strong>共振甕水</strong>為主，提升細胞含氧量。</li>
+                        <li><strong>常溫飲用護陽氣：</strong>嚴格忌口冰品冷飲，避免寒氣損傷脾胃運化水濕的能力。</li>
+                        <li><strong>搭配原生菌保養：</strong>日常保養一天 6 包（飯前飯後隨時可用），配常溫好水吞服，切忌溫熱水。</li>
+                        <li><strong>觀察身體訊號：</strong>若飲水不足易導致大腸吸水過度而便秘，應分次適量補充好水。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: 功法與養生實作 -->
     <div id="tab-practice" class="tab-content">
         
         <div class="practice-panel">
@@ -871,27 +1035,37 @@
         </div>
     </div>
 
-    <!-- Scripts: 改為立即執行的穩健綁定機制 -->
+    <!-- Scripts: 雙重保險分頁切換與進度保存 -->
     <script>
-        (function() {
+        function switchTab(targetId, btnEl) {
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
 
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            if (btnEl) {
+                btnEl.classList.add('active');
+            } else {
+                const matchedBtn = document.querySelector('.tab-btn[data-target="' + targetId + '"]');
+                if (matchedBtn) matchedBtn.classList.add('active');
+            }
+
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-target');
-                    
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    const targetContent = document.getElementById(targetId);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                    }
+                    switchTab(this.getAttribute('data-target'), this);
                 });
             });
-        })();
+            updateCounterUI();
+        });
 
         // Lung Practice Counter
         let count = parseInt(localStorage.getItem('lungPracticeCount_v6')) || 0;
